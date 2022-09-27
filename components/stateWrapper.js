@@ -1,12 +1,12 @@
-import {createContext, useState} from "react";
+import {createContext, useContext, useState} from "react";
 
 const AppContext = createContext(
     {
-        isOpen: true,
+        isOpen: false,
         items: [],
         openCart: () => {},
         closeCart: () => {},
-        addItemToCart: () => {},
+        addItemToCart: ( item ) => {},
         getNumerOfItems: () => {}
     }
 );
@@ -29,9 +29,9 @@ export default function StateWrapper( { children } ) {
         const found = temp.find( product => product.id === item.id );
 
         if ( found ) {
-            found.gty++;
+            found.qty++;
         } else {
-            item.gty = 1;
+            item.qty = 1;
             temp.push(item);
         }
 
@@ -39,7 +39,7 @@ export default function StateWrapper( { children } ) {
     }
 
     function handleNumberOfItems() {
-        const total = items.reduce( ( accumulator, item ) => accumulator + item.gty, 0 );
+        const total = items.reduce( ( accumulator, item ) => accumulator + item.qty, 0 );
         /* Vamos a regresar el acomulador de la suma de los productos de la propiedad gty para cada elemento */
         return total;
     }
@@ -56,4 +56,9 @@ export default function StateWrapper( { children } ) {
         }}
     > {children} </AppContext.Provider>;
 
+}
+
+/* Nos regresa nuestro hookContext, useContext requiere un contexto -> ( AppContext ) */
+export function useAppContext() {
+    return useContext( AppContext );
 }

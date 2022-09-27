@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "../styles/product.module.css";
-import {convertToPath} from "../lib/utils";
+import CardButtonAdd from "./cardButtonAdd";
 
-export default function Product( { item, showAs } ) {
+export default function Product( { item, showAs, qty } ) {
 
     if ( showAs === 'Page' ) {
         return (
@@ -17,7 +17,7 @@ export default function Product( { item, showAs } ) {
                     <div className={styles.price}>{item.price}</div>
                     <div> {item.description} </div>
                     <div>
-                        <button className={styles.addToCard}>Add to cart</button>
+                        <CardButtonAdd item={item}/>
                     </div>
                 </div>
             </div>
@@ -26,9 +26,17 @@ export default function Product( { item, showAs } ) {
 
     if ( showAs === 'ListItem' ) {
         return (
-            <>
-                List Item
-            </>
+            <div className={styles.listItem}>
+                <div>
+                    <Image src={item.image} alt={item.title} width='100' height='100' />
+                </div>
+                <div className={styles.listItemInfo}>
+                    <h3>{item.title}</h3>
+                    <div>{item.price}</div>
+                    {qty === 0 ? '' : <div>{qty} units</div> }
+                    {qty === 0 ? '' : <div>Subtotal: {qty * item.price}</div> }
+                </div>
+            </div>
         );
     }
 
@@ -36,7 +44,7 @@ export default function Product( { item, showAs } ) {
         <div className={styles.item}>
 
             <div>
-                <Link href={`/store/${convertToPath(item.title)}`}>
+                <Link href={`/store/${item.id.toString()}`}>
                     <a>
                         <Image src={item.image} alt={item.title} width='500' height='500' />
                     </a>
@@ -45,7 +53,7 @@ export default function Product( { item, showAs } ) {
 
             <div>
                 <h3>
-                    <Link href={`/store/${convertToPath(item.title)}`}>
+                    <Link href={`/store/${item.id.toString()}`}>
                         <a>{item.title}</a>
                     </Link>
                 </h3>
@@ -54,7 +62,7 @@ export default function Product( { item, showAs } ) {
             <div>$ {item.price}</div>
 
             <div>
-                <button className={styles.addToCard}>Add to cart</button>
+                <CardButtonAdd item={item}/>
             </div>
 
         </div>
